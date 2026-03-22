@@ -2,10 +2,11 @@ use chrono::Local;
 use gtk::glib;
 use gtk::prelude::*;
 use gtk4 as gtk;
-use gtk4::glib::ControlFlow;
+use gtk4::glib::{ControlFlow, Propagation};
 use log::{error, info, warn};
 use relm4::{ComponentParts, ComponentSender, RelmApp, SimpleComponent};
 
+use std::process::Command;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -37,6 +38,96 @@ fn monitor_num_to_icon(monitor_num: u8) -> String {
         2 => "🥉".to_string(),
         _ => "❔".to_string(),
     }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct VolumeState {
+    percent: Option<u32>,
+    muted: bool,
+}
+
+fn run_command_capture(program: &str, args: &[&str]) -> Option<String> {
+    let output = Command::new(program)
+        .args(args)
+        .env("LC_ALL", "C")
+        .output()
+        .ok()?;
+
+    if !output.status.success() {
+        return None;
+    }
+
+    String::from_utf8(output.stdout).ok()
+}
+
+fn run_command_status(program: &str, args: &[&str]) -> bool {
+    Command::new(program)
+        .args(args)
+        .env("LC_ALL", "C")
+        .status()
+        .map(|status| status.success())
+        .unwrap_or(false)
+}
+
+fn parse_first_percentage(output: &str) -> Option<u32> {
+    output.split_whitespace().find_map(|token| {
+        token
+            .strip_suffix('%')
+            .and_then(|value| value.parse::<u32>().ok())
+    })
+}
+
+fn parse_mute_output(output: &str) -> Option<bool> {
+    let value = output.split(':').nth(1)?.trim().to_ascii_lowercase();
+
+    match value.as_str() {
+        "yes" | "true" | "on" => Some(true),
+        "no" | "false" | "off" => Some(false),
+        _ => None,
+    }
+}
+
+fn query_volume_state() -> VolumeState {
+    let percent = run_command_capture("pactl", &["get-sink-volume", "@DEFAULT_SINK@"])
+        .and_then(|output| parse_first_percentage(&output));
+    let muted = run_command_capture("pactl", &["get-sink-mute", "@DEFAULT_SINK@"])
+        .and_then(|output| parse_mute_output(&output))
+        .unwrap_or(false);
+
+    VolumeState { percent, muted }
+}
+
+fn toggle_volume_mute() -> bool {
+    run_command_status("pactl", &["set-sink-mute", "@DEFAULT_SINK@", "toggle"])
+}
+
+fn step_volume(delta_percent: i32) -> bool {
+    let delta = if delta_percent >= 0 {
+        format!("+{}%", delta_percent)
+    } else {
+        format!("{}%", delta_percent)
+    };
+
+    run_command_status("pactl", &["set-sink-volume", "@DEFAULT_SINK@", &delta])
+}
+
+fn format_volume_label(state: VolumeState) -> String {
+    let icon = if state.muted {
+        "🔇"
+    } else {
+        match state.percent.unwrap_or(0) {
+            0..=34 => "🔈",
+            35..=69 => "🔉",
+            _ => "🔊",
+        }
+    };
+
+    let percent = state
+        .percent
+        .map(|value| format!("{}%", value))
+        .unwrap_or_else(|| "--%".to_string());
+
+    format!(" {} {} ", icon, percent)
 }
 
 // 用于 Tab 状态样式
@@ -107,6 +198,8 @@ pub enum AppInput {
     ToggleLayoutPanel,
     ToggleSeconds,
     ToggleTheme,
+    ToggleMute,
+    VolumeStep(i32),
     Screenshot,
     SharedMessageReceived(SharedMessage),
     SystemUpdate,
@@ -126,6 +219,7 @@ pub struct AppModel {
     pub memory_usage: f64,
     pub cpu_usage: f64,
     pub current_time: String,
+    pub volume_state: VolumeState,
 
     #[do_not_track]
     shared_buffer_opt: Option<Arc<SharedRingBuffer>>,
@@ -141,6 +235,8 @@ pub struct AppModel {
     time_button_widget: gtk::Button,
     #[do_not_track]
     theme_button_widget: gtk::Button,
+    #[do_not_track]
+    volume_button_widget: gtk::Button,
     #[do_not_track]
     monitor_label_widget: gtk::Label,
     #[do_not_track]
@@ -207,6 +303,9 @@ impl SimpleComponent for AppModel {
         let theme_button_widget: gtk::Button = builder
             .object("theme_button")
             .expect("Missing theme_button");
+        let volume_button_widget: gtk::Button = builder
+            .object("volume_button")
+            .expect("Missing volume_button");
         let monitor_label_widget: gtk::Label = builder
             .object("monitor_label")
             .expect("Missing monitor_label");
@@ -267,6 +366,33 @@ impl SimpleComponent for AppModel {
             theme_button_widget.connect_clicked(move |_| s.input(AppInput::ToggleTheme));
         }
 
+        {
+            let s = sender.clone();
+            volume_button_widget.connect_clicked(move |_| s.input(AppInput::ToggleMute));
+        }
+        {
+            let s = sender.clone();
+            let scroll_controller =
+                gtk::EventControllerScroll::new(gtk::EventControllerScrollFlags::VERTICAL);
+            scroll_controller.connect_scroll(move |_, _dx, dy| {
+                let step = if dy < 0.0 {
+                    Some(5)
+                } else if dy > 0.0 {
+                    Some(-5)
+                } else {
+                    None
+                };
+
+                if let Some(step) = step {
+                    s.input(AppInput::VolumeStep(step));
+                    Propagation::Stop
+                } else {
+                    Propagation::Proceed
+                }
+            });
+            volume_button_widget.add_controller(scroll_controller);
+        }
+
         // Tab 按钮与初始 emoji
         let mut tab_buttons = Vec::with_capacity(9);
         for i in 0..9 {
@@ -296,6 +422,7 @@ impl SimpleComponent for AppModel {
             memory_usage: 0.0,
             cpu_usage: 0.0,
             current_time: "".to_string(),
+            volume_state: VolumeState::default(),
             shared_buffer_opt: shared_arc.clone(),
             system_monitor: SystemMonitor::new(1),
             tracker: 0,
@@ -304,6 +431,7 @@ impl SimpleComponent for AppModel {
             memory_label_widget,
             time_button_widget,
             theme_button_widget,
+            volume_button_widget,
             monitor_label_widget,
             tab_buttons,
 
@@ -324,6 +452,7 @@ impl SimpleComponent for AppModel {
         root.remove_css_class("theme-light");
 
         model.update_time_display();
+        model.refresh_volume_state();
 
         // 先把 UI 设为初始状态
         model.sync_full_ui_once();
@@ -372,6 +501,22 @@ impl SimpleComponent for AppModel {
                 self.sync_theme_ui();
             }
 
+            AppInput::ToggleMute => {
+                if !toggle_volume_mute() {
+                    warn!("Failed to toggle mute via pactl");
+                }
+                self.refresh_volume_state();
+                self.sync_volume_ui();
+            }
+
+            AppInput::VolumeStep(step) => {
+                if !step_volume(step) {
+                    warn!("Failed to adjust volume via pactl");
+                }
+                self.refresh_volume_state();
+                self.sync_volume_ui();
+            }
+
             AppInput::Screenshot => {
                 info!("Taking screenshot");
                 if let Err(e) = std::process::Command::new("flameshot").arg("gui").spawn() {
@@ -398,7 +543,9 @@ impl SimpleComponent for AppModel {
                     };
                     self.cpu_usage = (snapshot.cpu_average as f64 / 100.0).clamp(0.0, 1.0);
                 }
+                self.refresh_volume_state();
                 self.sync_metrics_ui();
+                self.sync_volume_ui();
             }
 
             AppInput::UpdateTime => {
@@ -420,6 +567,10 @@ impl AppModel {
             "%Y-%m-%d %H:%M"
         };
         self.current_time = now.format(format_str).to_string();
+    }
+
+    fn refresh_volume_state(&mut self) {
+        self.volume_state = query_volume_state();
     }
 
     fn send_tag_command(&self, is_view: bool) {
@@ -473,6 +624,7 @@ impl AppModel {
         self.sync_theme_ui();
         self.sync_time_ui();
         self.sync_metrics_ui();
+        self.sync_volume_ui();
         self.sync_tabs_ui();
     }
 
@@ -549,6 +701,11 @@ impl AppModel {
         // 应用等级类
         apply_metric_classes(&self.cpu_label_widget, self.cpu_usage);
         apply_metric_classes(&self.memory_label_widget, self.memory_usage);
+    }
+
+    fn sync_volume_ui(&self) {
+        self.volume_button_widget
+            .set_label(&format_volume_label(self.volume_state));
     }
 
     fn sync_tabs_ui(&self) {
