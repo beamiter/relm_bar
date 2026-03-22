@@ -1,77 +1,109 @@
 /* ==================== Theme roots ==================== */
 window.theme-light {
-  background-color: rgba(255, 255, 255, 0.90);
+  background-color: rgba(245, 247, 250, 0.72);
 }
 
 window.theme-dark {
-  /* Let the panel draw itself; keep window transparent-ish */
   background-color: rgba(0, 0, 0, 0.0);
 }
 
 /* Main panel container (rounded, layered like xcb_bar) */
 window.theme-light .panel-root {
   background-color: rgba(255, 255, 255, 0.92);
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.96), rgba(245, 247, 250, 0.90));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(238, 243, 248, 0.92));
   border: 1px solid rgba(17, 24, 39, 0.08);
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  border-radius: 18px;
+  box-shadow:
+    0 14px 34px rgba(15, 23, 42, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.78) inset;
 }
 
 window.theme-dark .panel-root {
-  background-color: rgba(16, 18, 26, 0.88);
-  background-image: linear-gradient(to bottom, rgba(28, 30, 44, 0.92), rgba(12, 14, 20, 0.86));
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 14px;
+  background-color: rgba(8, 12, 20, 0.92);
+  background-image:
+    linear-gradient(to right, rgba(34, 211, 238, 0.06), rgba(8, 12, 20, 0.00) 18%, rgba(16, 185, 129, 0.05) 82%, rgba(8, 12, 20, 0.00)),
+    linear-gradient(to bottom, rgba(18, 24, 39, 0.96), rgba(5, 9, 17, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 18px;
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.45),
-    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    0 18px 44px rgba(0, 0, 0, 0.52),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(15, 23, 42, 0.55);
+}
+
+.workspace-strip,
+.status-strip {
+  padding: 3px 6px;
+  border-radius: 14px;
+}
+
+window.theme-light .workspace-strip,
+window.theme-light .status-strip {
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+window.theme-dark .workspace-strip,
+window.theme-dark .status-strip {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  box-shadow:
+    0 10px 24px rgba(2, 6, 23, 0.36),
+    0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
 /* ==================== 标签按钮基础样式（保留你的风格） ==================== */
 .tab-button {
-  margin: 0px 2px;
+  margin: 0px 3px;
   padding: 0px;
-  border-radius: 6px;
-  font-size: 20px;
-  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 1px solid rgba(15, 23, 42, 0.10);
   background-image: none;
-  color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #e5eefb;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.10);
 }
 
 /* Dark theme overrides for tab buttons (keep your per-tag colors, but make empty/occupied readable) */
 window.theme-dark .tab-button {
-  color: rgba(229, 231, 235, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(226, 232, 240, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  background-color: rgba(15, 23, 42, 0.62);
   box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.35),
-    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    0 12px 24px rgba(2, 6, 23, 0.42),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(15, 23, 42, 0.42);
 }
 
 window.theme-dark .tab-button.empty {
-  background-color: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.10) !important;
-  color: rgba(229, 231, 235, 0.92) !important;
+  background-color: rgba(15, 23, 42, 0.38) !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+  color: rgba(226, 232, 240, 0.80) !important;
 }
 
 window.theme-dark .tab-button.empty:hover {
-  background-color: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
+  background-color: rgba(30, 41, 59, 0.72) !important;
+  border-color: rgba(103, 232, 249, 0.28) !important;
+  box-shadow:
+    0 12px 28px rgba(2, 6, 23, 0.48) !important,
+    0 0 0 1px rgba(34, 211, 238, 0.12) inset !important;
 }
 
 window.theme-dark .tab-button.occupied {
   color: rgba(248, 250, 252, 0.96) !important;
+  box-shadow:
+    0 12px 26px rgba(2, 6, 23, 0.46) !important,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset !important;
 }
 
 .tab-button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
 }
 
 .tab-button,
 .tab-button:hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 /* ==================== 各索引的配色（保持原有定义） ==================== */
@@ -132,34 +164,61 @@ window.theme-dark .tab-button.occupied {
 
 /* ==================== Urgent 状态 ==================== */
 .tab-button.urgent {
-  background-color: rgba(220, 53, 69, 0.8) !important;
-  border: 2px solid #dc3545 !important;
+  background-image: linear-gradient(to bottom, rgba(248, 113, 113, 0.94), rgba(190, 24, 93, 0.90)) !important;
+  border: 1px solid rgba(254, 202, 202, 0.70) !important;
   color: white !important;
   font-weight: bold !important;
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.5) !important;
+  box-shadow:
+    0 0 24px rgba(244, 63, 94, 0.34) !important,
+    0 12px 28px rgba(2, 6, 23, 0.52) !important;
+}
+
+window.theme-dark .tab-button:nth-child(n).occupied {
+  border-width: 1px !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+window.theme-dark .tab-button:nth-child(n).selected {
+  border-width: 1px !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.10) inset !important,
+    0 0 20px rgba(255, 255, 255, 0.10) !important,
+    0 14px 28px rgba(2, 6, 23, 0.56) !important;
+}
+
+window.theme-dark .tab-button:nth-child(n).filled {
+  border-width: 1px !important;
+  border-color: rgba(255, 255, 255, 0.40) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset !important,
+    0 0 26px rgba(255, 255, 255, 0.14) !important,
+    0 14px 30px rgba(2, 6, 23, 0.58) !important;
 }
 
 /* ==================== Metric 胶囊标签 ==================== */
 .metric-label {
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-weight: 600;
+  font-family: "JetBrains Mono", "Iosevka", monospace;
+  font-weight: 700;
   font-size: 12px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.4px;
   border: 1px solid rgba(0,0,0,0.06);
   background-color: #f5f7fa;
-  color: #333;
+  color: #243042;
   transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
   box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0), 0 1px 2px rgba(0,0,0,0.05);
 }
 
 window.theme-dark .metric-label {
-  border: 1px solid rgba(255,255,255,0.10);
-  background-color: rgba(255,255,255,0.08);
-  color: rgba(229,231,235,0.92);
+  border: 1px solid rgba(125, 211, 252, 0.14);
+  background-color: rgba(8, 47, 73, 0.46);
+  color: rgba(224,242,254,0.96);
   box-shadow:
-    0 10px 24px rgba(0,0,0,0.40),
-    0 1px 0 rgba(255,255,255,0.06) inset;
+    0 12px 28px rgba(2,6,23,0.42),
+    0 1px 0 rgba(255,255,255,0.05) inset,
+    0 0 0 1px rgba(14, 165, 233, 0.06);
 }
 
 window.theme-dark .metric-label.level-ok   { background-color: rgba(34, 197, 94, 0.18);  color: rgba(220, 252, 231, 0.95); border-color: rgba(34, 197, 94, 0.28); }
@@ -175,37 +234,40 @@ window.theme-dark .metric-label.level-crit { background-color: rgba(239, 68, 68,
 /* Time 胶囊样式 */
 .time-button {
   margin: 0 2px;
-  padding: 2px 12px;
+  padding: 3px 14px;
   border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  background-color: #BABC7F;
-  color: #374151;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.2px;
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  background-color: rgba(224, 242, 254, 0.92);
+  color: #0f172a;
+  font-family: "JetBrains Mono", "Iosevka", monospace;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.6px;
   background-image: none;
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.08);
 }
 
 window.theme-dark .time-button {
-  border: 1px solid rgba(255,255,255,0.12);
-  background-color: rgba(255,255,255,0.08);
-  color: rgba(229,231,235,0.95);
+  border: 1px solid rgba(103,232,249,0.24);
+  background-image: linear-gradient(to bottom, rgba(8, 145, 178, 0.30), rgba(6, 78, 59, 0.24));
+  background-color: rgba(8, 47, 73, 0.82);
+  color: rgba(236,254,255,0.98);
   box-shadow:
-    0 10px 24px rgba(0,0,0,0.40),
-    0 1px 0 rgba(255,255,255,0.06) inset;
+    0 16px 34px rgba(2,6,23,0.50),
+    0 1px 0 rgba(255,255,255,0.10) inset,
+    0 0 24px rgba(34,211,238,0.10);
 }
 window.theme-dark .time-button:hover {
-  background-color: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.18);
+  background-color: rgba(8, 47, 73, 0.92);
+  border-color: rgba(103,232,249,0.32);
   color: rgba(248,250,252,0.98);
 }
 window.theme-dark .time-button:active {
-  background-color: rgba(255,255,255,0.09);
+  background-color: rgba(6, 78, 59, 0.54);
   box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
 }
-.time-button:hover { background-color: #f3f4f6; border-color: #d1d5db; box-shadow: 0 2px 6px rgba(0,0,0,0.08); color: #111827; }
+.time-button:hover { background-color: #f0f9ff; border-color: #7dd3fc; box-shadow: 0 6px 16px rgba(14,165,233,0.12); color: #111827; }
 .time-button:active { background-color: #e5e7eb; border-color: #cfd3da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.12); }
 .time-button:focus-visible { outline: none; border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59,130,246,0.25); }
 
@@ -214,9 +276,9 @@ window.theme-dark .time-button:active {
   margin: 0 2px;
   padding: 2px 12px;
   border-radius: 999px;
-  border: 1px solid #c7ecf5;
-  background-color: #eefbff;
-  color: #0e7490;
+  border: 1px solid #cce6f2;
+  background-color: #eef7fb;
+  color: #155e75;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.2px;
@@ -226,16 +288,16 @@ window.theme-dark .time-button:active {
 }
 
 window.theme-dark .screenshot-button {
-  border: 1px solid rgba(255,255,255,0.12);
-  background-color: rgba(56, 189, 248, 0.16);
-  color: rgba(224, 242, 254, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background-color: rgba(30, 41, 59, 0.88);
+  color: rgba(226, 232, 240, 0.92);
   box-shadow:
-    0 10px 24px rgba(0,0,0,0.40),
-    0 1px 0 rgba(255,255,255,0.06) inset;
+    0 10px 24px rgba(2,6,23,0.42),
+    0 1px 0 rgba(255,255,255,0.05) inset;
 }
 window.theme-dark .screenshot-button:hover {
-  background-color: rgba(56, 189, 248, 0.22);
-  border-color: rgba(56, 189, 248, 0.32);
+  background-color: rgba(51, 65, 85, 0.94);
+  border-color: rgba(148, 163, 184, 0.24);
 }
 .screenshot-button:hover { background-color: #e6f8ff; border-color: #b3e6f2; color: #0a5161; box-shadow: 0 2px 6px rgba(14, 116, 144, 0.12); }
 .screenshot-button:active { background-color: #dbf3ff; border-color: #a6deea; box-shadow: inset 0 1px 2px rgba(14, 116, 144, 0.18); }
@@ -243,56 +305,61 @@ window.theme-dark .screenshot-button:hover {
 
 /* ==================== 布局开关与选项（pill 风格） ==================== */
 .layout-toggle {
-  padding: 2px 10px;
+  padding: 2px 12px;
   border-radius: 999px;
-  font-weight: 600;
+  font-family: "JetBrains Mono", "Iosevka", monospace;
+  font-weight: 700;
   font-size: 12px;
   background-image: none;
-  border: 1px solid transparent;
+  border: 1px solid rgba(148, 163, 184, 0.16);
   color: #fff;
   transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
 window.theme-dark .layout-toggle {
   box-shadow:
-    0 10px 24px rgba(0,0,0,0.40),
+    0 12px 26px rgba(2,6,23,0.42),
     0 1px 0 rgba(255,255,255,0.06) inset;
 }
-.layout-toggle.open   { background-color: rgba(60,179,113,0.90); border-color: #3cb371; } /* 绿色 */
-.layout-toggle.closed { background-color: rgba(211,84,0,0.90);  border-color: #d35400; } /* 橙色 */
-.layout-toggle:hover { filter: brightness(1.05); box-shadow: 0 2px 6px rgba(0,0,0,0.10); }
+.layout-toggle.open   { background-image: linear-gradient(to bottom, rgba(20,184,166,0.94), rgba(5,150,105,0.90)); border-color: rgba(110, 231, 183, 0.44); }
+.layout-toggle.closed { background-image: linear-gradient(to bottom, rgba(249,115,22,0.94), rgba(194,65,12,0.90));  border-color: rgba(254, 215, 170, 0.42); }
+.layout-toggle:hover { box-shadow: 0 12px 24px rgba(2,6,23,0.42), 0 0 20px rgba(255,255,255,0.06); }
 
 .layout-selector { /* 可选容器样式 */ }
 
 .layout-option {
   padding: 1px 8px;
   border-radius: 999px;
-  font-weight: 600;
+  font-family: "JetBrains Mono", "Iosevka", monospace;
+  font-weight: 700;
   font-size: 12px;
   background-image: none;
-  color: #fff;
-  background-color: rgba(65,105,225,0.90); /* royal blue */
-  border: 1px solid #4169e1;
+  color: #e2e8f0;
+  background-color: rgba(30,41,59,0.92);
+  border: 1px solid rgba(148, 163, 184, 0.16);
   transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
 }
-.layout-option:hover { filter: brightness(1.05); box-shadow: 0 2px 6px rgba(0,0,0,0.10); }
-.layout-option.current { background-color: rgba(60,179,113,0.95); border-color: #3cb371; box-shadow: 0 2px 8px rgba(60,179,113,0.25); }
+.layout-option:hover { background-color: rgba(51,65,85,0.96); box-shadow: 0 10px 22px rgba(2,6,23,0.34); }
+.layout-option.current { background-image: linear-gradient(to bottom, rgba(34,197,94,0.92), rgba(13,148,136,0.88)); border-color: rgba(187,247,208,0.38); box-shadow: 0 0 18px rgba(16,185,129,0.18), 0 12px 28px rgba(2,6,23,0.42); }
 
 /* ==================== Volume / Theme buttons (new) ==================== */
 .volume-button,
 .theme-button {
   margin: 0 2px;
-  padding: 2px 12px;
+  padding: 3px 12px;
   border-radius: 999px;
   border: 1px solid rgba(17, 24, 39, 0.10);
   background-color: rgba(255,255,255,0.82);
   color: #111827;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 12px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.4px;
   background-image: none;
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.volume-button {
+  font-family: "JetBrains Mono", "Iosevka", monospace;
 }
 .volume-button:hover,
 .theme-button:hover {
@@ -308,15 +375,50 @@ window.theme-dark .layout-toggle {
 
 window.theme-dark .volume-button,
 window.theme-dark .theme-button {
-  border: 1px solid rgba(255,255,255,0.12);
-  background-color: rgba(255,255,255,0.08);
+  border: 1px solid rgba(148,163,184,0.16);
+  background-color: rgba(30,41,59,0.82);
   color: rgba(229,231,235,0.95);
   box-shadow:
-    0 10px 24px rgba(0,0,0,0.40),
+    0 12px 26px rgba(2,6,23,0.42),
     0 1px 0 rgba(255,255,255,0.06) inset;
+}
+window.theme-dark .volume-button {
+  border-color: rgba(34,211,238,0.22);
+  background-image: linear-gradient(to bottom, rgba(8,145,178,0.24), rgba(15,23,42,0.84));
+  color: rgba(236,254,255,0.98);
+  box-shadow:
+    0 14px 30px rgba(2,6,23,0.46),
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 0 18px rgba(34,211,238,0.10);
 }
 window.theme-dark .volume-button:hover,
 window.theme-dark .theme-button:hover {
-  background-color: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.18);
+  background-color: rgba(51,65,85,0.92);
+  border-color: rgba(148,163,184,0.24);
+}
+
+window.theme-dark .volume-button:hover {
+  border-color: rgba(34,211,238,0.30);
+}
+
+.monitor-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+window.theme-light .monitor-badge {
+  background-color: rgba(255,255,255,0.72);
+  border: 1px solid rgba(17,24,39,0.08);
+  color: #0f172a;
+}
+
+window.theme-dark .monitor-badge {
+  background-image: linear-gradient(to bottom, rgba(15,23,42,0.94), rgba(30,41,59,0.88));
+  border: 1px solid rgba(148,163,184,0.16);
+  color: rgba(226,232,240,0.96);
+  box-shadow:
+    0 12px 24px rgba(2,6,23,0.40),
+    0 1px 0 rgba(255,255,255,0.05) inset;
 }
