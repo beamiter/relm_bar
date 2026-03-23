@@ -7,28 +7,23 @@ window.theme-dark {
   background-color: rgba(0, 0, 0, 0.0);
 }
 
-/* Main panel container (rounded, layered like xcb_bar) */
+/* Main panel container */
 window.theme-light .panel-root {
   background-color: rgba(255, 255, 255, 0.92);
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(238, 243, 248, 0.92));
   border: 1px solid rgba(17, 24, 39, 0.08);
   border-radius: 18px;
-  box-shadow:
-    0 14px 34px rgba(15, 23, 42, 0.12),
-    0 1px 0 rgba(255, 255, 255, 0.78) inset;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10);
 }
 
 window.theme-dark .panel-root {
   background-color: rgba(8, 12, 20, 0.92);
   background-image:
-    linear-gradient(to right, rgba(34, 211, 238, 0.06), rgba(8, 12, 20, 0.00) 18%, rgba(16, 185, 129, 0.05) 82%, rgba(8, 12, 20, 0.00)),
+    linear-gradient(to right, rgba(34, 211, 238, 0.04), transparent 20%, rgba(16, 185, 129, 0.03) 80%, transparent),
     linear-gradient(to bottom, rgba(18, 24, 39, 0.96), rgba(5, 9, 17, 0.92));
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.12);
   border-radius: 18px;
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.52),
-    0 1px 0 rgba(255, 255, 255, 0.08) inset,
-    0 0 0 1px rgba(15, 23, 42, 0.55);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 .workspace-strip,
@@ -45,158 +40,108 @@ window.theme-light .status-strip {
 
 window.theme-dark .workspace-strip,
 window.theme-dark .status-strip {
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(148, 163, 184, 0.08);
-  box-shadow:
-    0 10px 24px rgba(2, 6, 23, 0.36),
-    0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
-/* ==================== 标签按钮基础样式（保留你的风格） ==================== */
+/* ==================== Tab buttons - unified style ==================== */
 .tab-button {
-  margin: 0px 3px;
+  margin: 0px 2px;
   padding: 0px;
   border-radius: 10px;
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid rgba(15, 23, 42, 0.10);
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid transparent;
   background-image: none;
-  color: #e5eefb;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.10);
+  transition: all 0.16s ease;
 }
 
-/* Dark theme overrides for tab buttons (keep your per-tag colors, but make empty/occupied readable) */
-window.theme-dark .tab-button {
-  color: rgba(226, 232, 240, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.10);
-  background-color: rgba(15, 23, 42, 0.62);
-  box-shadow:
-    0 12px 24px rgba(2, 6, 23, 0.42),
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 0 0 1px rgba(15, 23, 42, 0.42);
+/* --- Light theme tab states --- */
+window.theme-light .tab-button.empty {
+  background-color: rgba(241, 245, 249, 0.90);
+  border-color: rgba(203, 213, 225, 0.60);
+  color: rgba(100, 116, 139, 0.70);
+}
+window.theme-light .tab-button.empty:hover {
+  background-color: rgba(224, 242, 254, 0.80);
+  border-color: rgba(56, 189, 248, 0.40);
+  color: rgba(14, 165, 233, 0.90);
 }
 
+window.theme-light .tab-button.occupied {
+  background-color: rgba(224, 242, 254, 0.70);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #1e40af;
+}
+window.theme-light .tab-button.occupied:hover {
+  background-color: rgba(191, 219, 254, 0.80);
+  border-color: rgba(59, 130, 246, 0.50);
+}
+
+window.theme-light .tab-button.selected {
+  background-color: rgba(59, 130, 246, 0.85);
+  border-color: rgba(59, 130, 246, 0.90);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.30);
+}
+
+window.theme-light .tab-button.filled {
+  background-color: rgba(37, 99, 235, 0.92);
+  border-color: rgba(37, 99, 235, 0.95);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+
+/* --- Dark theme tab states --- */
 window.theme-dark .tab-button.empty {
-  background-color: rgba(15, 23, 42, 0.38) !important;
-  border-color: rgba(148, 163, 184, 0.12) !important;
-  color: rgba(226, 232, 240, 0.80) !important;
+  background-color: rgba(15, 23, 42, 0.40);
+  border-color: rgba(148, 163, 184, 0.10);
+  color: rgba(148, 163, 184, 0.50);
 }
-
 window.theme-dark .tab-button.empty:hover {
-  background-color: rgba(30, 41, 59, 0.72) !important;
-  border-color: rgba(103, 232, 249, 0.28) !important;
-  box-shadow:
-    0 12px 28px rgba(2, 6, 23, 0.48) !important,
-    0 0 0 1px rgba(34, 211, 238, 0.12) inset !important;
+  background-color: rgba(30, 41, 59, 0.65);
+  border-color: rgba(103, 232, 249, 0.25);
+  color: rgba(203, 213, 225, 0.80);
 }
 
 window.theme-dark .tab-button.occupied {
-  color: rgba(248, 250, 252, 0.96) !important;
-  box-shadow:
-    0 12px 26px rgba(2, 6, 23, 0.46) !important,
-    0 1px 0 rgba(255, 255, 255, 0.08) inset !important;
+  background-color: rgba(22, 78, 99, 0.45);
+  border-color: rgba(34, 211, 238, 0.22);
+  color: rgba(224, 242, 254, 0.92);
+}
+window.theme-dark .tab-button.occupied:hover {
+  background-color: rgba(22, 78, 99, 0.60);
+  border-color: rgba(34, 211, 238, 0.35);
 }
 
-.tab-button:hover {
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+window.theme-dark .tab-button.selected {
+  background-color: rgba(8, 145, 178, 0.70);
+  border-color: rgba(34, 211, 238, 0.55);
+  color: rgba(236, 254, 255, 0.98);
+  font-weight: 700;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.20);
 }
 
-.tab-button,
-.tab-button:hover {
-  transition: box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+window.theme-dark .tab-button.filled {
+  background-color: rgba(8, 145, 178, 0.85);
+  border-color: rgba(34, 211, 238, 0.65);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.28);
 }
 
-/* ==================== 各索引的配色（保持原有定义） ==================== */
-.tab-button:nth-child(1).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(1).empty:hover { border-color: #ff6b6b; border-width: 2px; box-shadow: 0 0 6px rgba(255, 107, 107, 0.4); background-color: rgba(255, 107, 107, 0.1); }
-.tab-button:nth-child(1).occupied { background-color: rgba(255, 107, 107, 0.3); border-color: rgba(255, 107, 107, 0.6); color: #333; }
-.tab-button:nth-child(1).selected { background-color: rgba(255, 107, 107, 0.7); border-color: rgba(255, 107, 107, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(1).filled { background-color: rgba(255, 107, 107, 1); border-color: rgba(255, 107, 107, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4); }
-
-/* ... 2 ~ 9 的样式同你原有，略（已保持） ... */
-.tab-button:nth-child(2).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(2).empty:hover { border-color: #4ecdc4; border-width: 2px; box-shadow: 0 0 6px rgba(78, 205, 196, 0.4); background-color: rgba(78, 205, 196, 0.1); }
-.tab-button:nth-child(2).occupied { background-color: rgba(78, 205, 196, 0.3); border-color: rgba(78, 205, 196, 0.6); color: #333; }
-.tab-button:nth-child(2).selected { background-color: rgba(78, 205, 196, 0.7); border-color: rgba(78, 205, 196, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(2).filled { background-color: rgba(78, 205, 196, 1); border-color: rgba(78, 205, 196, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4); }
-
-.tab-button:nth-child(3).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(3).empty:hover { border-color: #45b7d1; border-width: 2px; box-shadow: 0 0 6px rgba(69, 183, 209, 0.4); background-color: rgba(69, 183, 209, 0.1); }
-.tab-button:nth-child(3).occupied { background-color: rgba(69, 183, 209, 0.3); border-color: rgba(69, 183, 209, 0.6); color: #333; }
-.tab-button:nth-child(3).selected { background-color: rgba(69, 183, 209, 0.7); border-color: rgba(69, 183, 209, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(3).filled { background-color: rgba(69, 183, 209, 1); border-color: rgba(69, 183, 209, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(69, 183, 209, 0.4); }
-
-.tab-button:nth-child(4).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(4).empty:hover { border-color: #96ceb4; border-width: 2px; box-shadow: 0 0 6px rgba(150, 206, 180, 0.4); background-color: rgba(150, 206, 180, 0.1); }
-.tab-button:nth-child(4).occupied { background-color: rgba(150, 206, 180, 0.3); border-color: rgba(150, 206, 180, 0.6); color: #333; }
-.tab-button:nth-child(4).selected { background-color: rgba(150, 206, 180, 0.7); border-color: rgba(150, 206, 180, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(4).filled { background-color: rgba(150, 206, 180, 1); border-color: rgba(150, 206, 180, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(150, 206, 180, 0.4); }
-
-.tab-button:nth-child(5).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(5).empty:hover { border-color: #feca57; border-width: 2px; box-shadow: 0 0 6px rgba(254, 202, 87, 0.4); background-color: rgba(254, 202, 87, 0.1); }
-.tab-button:nth-child(5).occupied { background-color: rgba(254, 202, 87, 0.3); border-color: rgba(254, 202, 87, 0.6); color: #333; }
-.tab-button:nth-child(5).selected { background-color: rgba(254, 202, 87, 0.7); border-color: rgba(254, 202, 87, 0.9); color: #333; font-weight: bold; }
-.tab-button:nth-child(5).filled { background-color: rgba(254, 202, 87, 1); border-color: rgba(254, 202, 87, 1); color: #333; font-weight: bold; box-shadow: 0 2px 8px rgba(254, 202, 87, 0.4); }
-
-.tab-button:nth-child(6).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(6).empty:hover { border-color: #ff9ff3; border-width: 2px; box-shadow: 0 0 6px rgba(255, 159, 243, 0.4); background-color: rgba(255, 159, 243, 0.1); }
-.tab-button:nth-child(6).occupied { background-color: rgba(255, 159, 243, 0.3); border-color: rgba(255, 159, 243, 0.6); color: #333; }
-.tab-button:nth-child(6).selected { background-color: rgba(255, 159, 243, 0.7); border-color: rgba(255, 159, 243, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(6).filled { background-color: rgba(255, 159, 243, 1); border-color: rgba(255, 159, 243, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(255, 159, 243, 0.4); }
-
-.tab-button:nth-child(7).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(7).empty:hover { border-color: #54a0ff; border-width: 2px; box-shadow: 0 0 6px rgba(84, 160, 255, 0.4); background-color: rgba(84, 160, 255, 0.1); }
-.tab-button:nth-child(7).occupied { background-color: rgba(84, 160, 255, 0.3); border-color: rgba(84, 160, 255, 0.6); color: #333; }
-.tab-button:nth-child(7).selected { background-color: rgba(84, 160, 255, 0.7); border-color: rgba(84, 160, 255, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(7).filled { background-color: rgba(84, 160, 255, 1); border-color: rgba(84, 160, 255, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(84, 160, 255, 0.4); }
-
-.tab-button:nth-child(8).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(8).empty:hover { border-color: #5f27cd; border-width: 2px; box-shadow: 0 0 6px rgba(95, 39, 205, 0.4); background-color: rgba(95, 39, 205, 0.1); }
-.tab-button:nth-child(8).occupied { background-color: rgba(95, 39, 205, 0.3); border-color: rgba(95, 39, 205, 0.6); color: #333; }
-.tab-button:nth-child(8).selected { background-color: rgba(95, 39, 205, 0.7); border-color: rgba(95, 39, 205, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(8).filled { background-color: rgba(95, 39, 205, 1); border-color: rgba(95, 39, 205, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(95, 39, 205, 0.4); }
-
-.tab-button:nth-child(9).empty { background-color: #ffffff; border-color: #dee2e6; color: #333; }
-.tab-button:nth-child(9).empty:hover { border-color: #00d2d3; border-width: 2px; box-shadow: 0 0 6px rgba(0, 210, 211, 0.4); background-color: rgba(0, 210, 211, 0.1); }
-.tab-button:nth-child(9).occupied { background-color: rgba(0, 210, 211, 0.3); border-color: rgba(0, 210, 211, 0.6); color: #333; }
-.tab-button:nth-child(9).selected { background-color: rgba(0, 210, 211, 0.7); border-color: rgba(0, 210, 211, 0.9); color: white; font-weight: bold; }
-.tab-button:nth-child(9).filled { background-color: rgba(0, 210, 211, 1); border-color: rgba(0, 210, 211, 1); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(0, 210, 211, 0.4); }
-
-/* ==================== Urgent 状态 ==================== */
+/* --- Urgent state (both themes) --- */
 .tab-button.urgent {
-  background-image: linear-gradient(to bottom, rgba(248, 113, 113, 0.94), rgba(190, 24, 93, 0.90)) !important;
-  border: 1px solid rgba(254, 202, 202, 0.70) !important;
-  color: white !important;
-  font-weight: bold !important;
-  box-shadow:
-    0 0 24px rgba(244, 63, 94, 0.34) !important,
-    0 12px 28px rgba(2, 6, 23, 0.52) !important;
+  background-image: linear-gradient(to bottom, rgba(248, 113, 113, 0.92), rgba(190, 24, 93, 0.88));
+  border: 1px solid rgba(254, 202, 202, 0.60);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.30);
 }
 
-window.theme-dark .tab-button:nth-child(n).occupied {
-  border-width: 1px !important;
-  border-color: rgba(255, 255, 255, 0.16) !important;
-}
-
-window.theme-dark .tab-button:nth-child(n).selected {
-  border-width: 1px !important;
-  border-color: rgba(255, 255, 255, 0.34) !important;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.10) inset !important,
-    0 0 20px rgba(255, 255, 255, 0.10) !important,
-    0 14px 28px rgba(2, 6, 23, 0.56) !important;
-}
-
-window.theme-dark .tab-button:nth-child(n).filled {
-  border-width: 1px !important;
-  border-color: rgba(255, 255, 255, 0.40) !important;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.14) inset !important,
-    0 0 26px rgba(255, 255, 255, 0.14) !important,
-    0 14px 30px rgba(2, 6, 23, 0.58) !important;
-}
-
-/* ==================== Metric 胶囊标签 ==================== */
+/* ==================== Metric capsule labels ==================== */
 .metric-label {
   padding: 3px 10px;
   border-radius: 999px;
@@ -204,34 +149,32 @@ window.theme-dark .tab-button:nth-child(n).filled {
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.4px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   background-color: #f5f7fa;
   color: #243042;
   transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
-  box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0), 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 window.theme-dark .metric-label {
   border: 1px solid rgba(125, 211, 252, 0.14);
   background-color: rgba(8, 47, 73, 0.46);
-  color: rgba(224,242,254,0.96);
-  box-shadow:
-    0 12px 28px rgba(2,6,23,0.42),
-    0 1px 0 rgba(255,255,255,0.05) inset,
-    0 0 0 1px rgba(14, 165, 233, 0.06);
+  color: rgba(224, 242, 254, 0.96);
 }
 
-window.theme-dark .metric-label.level-ok   { background-color: rgba(34, 197, 94, 0.18);  color: rgba(220, 252, 231, 0.95); border-color: rgba(34, 197, 94, 0.28); }
-window.theme-dark .metric-label.level-warn { background-color: rgba(245, 158, 11, 0.18); color: rgba(255, 247, 237, 0.95); border-color: rgba(245, 158, 11, 0.28); }
-window.theme-dark .metric-label.level-high { background-color: rgba(249, 115, 22, 0.18); color: rgba(255, 237, 213, 0.95); border-color: rgba(249, 115, 22, 0.28); }
-window.theme-dark .metric-label.level-crit { background-color: rgba(239, 68, 68, 0.20);  color: rgba(254, 226, 226, 0.98); border-color: rgba(239, 68, 68, 0.34); box-shadow: 0 14px 30px rgba(0,0,0,0.45); }
+/* Metric levels - light */
 .metric-label.level-ok { background-color: #e6f7ea; color: #18794e; border-color: #c9eed5; }
 .metric-label.level-warn { background-color: #fff8e6; color: #8a5d00; border-color: #ffeab8; }
 .metric-label.level-high { background-color: #fff2e8; color: #9f3a0d; border-color: #ffd3bf; }
 .metric-label.level-crit { background-color: #ffeaea; color: #a8071a; border-color: #ffc1c1; box-shadow: 0 1px 6px rgba(168, 7, 26, 0.12); }
-.metric-label:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.30); }
 
-/* Time 胶囊样式 */
+/* Metric levels - dark */
+window.theme-dark .metric-label.level-ok   { background-color: rgba(34, 197, 94, 0.18);  color: rgba(220, 252, 231, 0.95); border-color: rgba(34, 197, 94, 0.28); }
+window.theme-dark .metric-label.level-warn { background-color: rgba(245, 158, 11, 0.18); color: rgba(255, 247, 237, 0.95); border-color: rgba(245, 158, 11, 0.28); }
+window.theme-dark .metric-label.level-high { background-color: rgba(249, 115, 22, 0.18); color: rgba(255, 237, 213, 0.95); border-color: rgba(249, 115, 22, 0.28); }
+window.theme-dark .metric-label.level-crit { background-color: rgba(239, 68, 68, 0.20);  color: rgba(254, 226, 226, 0.98); border-color: rgba(239, 68, 68, 0.34); }
+
+/* ==================== Time button ==================== */
 .time-button {
   margin: 0 2px;
   padding: 3px 14px;
@@ -245,33 +188,28 @@ window.theme-dark .metric-label.level-crit { background-color: rgba(239, 68, 68,
   letter-spacing: 0.6px;
   background-image: none;
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.08);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.06);
 }
 
 window.theme-dark .time-button {
-  border: 1px solid rgba(103,232,249,0.24);
+  border: 1px solid rgba(103, 232, 249, 0.24);
   background-image: linear-gradient(to bottom, rgba(8, 145, 178, 0.30), rgba(6, 78, 59, 0.24));
   background-color: rgba(8, 47, 73, 0.82);
-  color: rgba(236,254,255,0.98);
-  box-shadow:
-    0 16px 34px rgba(2,6,23,0.50),
-    0 1px 0 rgba(255,255,255,0.10) inset,
-    0 0 24px rgba(34,211,238,0.10);
+  color: rgba(236, 254, 255, 0.98);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.08);
 }
 window.theme-dark .time-button:hover {
   background-color: rgba(8, 47, 73, 0.92);
-  border-color: rgba(103,232,249,0.32);
-  color: rgba(248,250,252,0.98);
+  border-color: rgba(103, 232, 249, 0.32);
 }
 window.theme-dark .time-button:active {
   background-color: rgba(6, 78, 59, 0.54);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
 }
-.time-button:hover { background-color: #f0f9ff; border-color: #7dd3fc; box-shadow: 0 6px 16px rgba(14,165,233,0.12); color: #111827; }
-.time-button:active { background-color: #e5e7eb; border-color: #cfd3da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.12); }
-.time-button:focus-visible { outline: none; border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59,130,246,0.25); }
+.time-button:hover { background-color: #f0f9ff; border-color: #7dd3fc; color: #111827; }
+.time-button:active { background-color: #e5e7eb; border-color: #cfd3da; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12); }
+.time-button:focus-visible { outline: none; border-color: #93c5fd; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); }
 
-/* Screenshot 胶囊样式 */
+/* ==================== Screenshot button ==================== */
 .screenshot-button {
   margin: 0 2px;
   padding: 2px 12px;
@@ -291,19 +229,16 @@ window.theme-dark .screenshot-button {
   border: 1px solid rgba(148, 163, 184, 0.16);
   background-color: rgba(30, 41, 59, 0.88);
   color: rgba(226, 232, 240, 0.92);
-  box-shadow:
-    0 10px 24px rgba(2,6,23,0.42),
-    0 1px 0 rgba(255,255,255,0.05) inset;
 }
 window.theme-dark .screenshot-button:hover {
   background-color: rgba(51, 65, 85, 0.94);
   border-color: rgba(148, 163, 184, 0.24);
 }
-.screenshot-button:hover { background-color: #e6f8ff; border-color: #b3e6f2; color: #0a5161; box-shadow: 0 2px 6px rgba(14, 116, 144, 0.12); }
+.screenshot-button:hover { background-color: #e6f8ff; border-color: #b3e6f2; color: #0a5161; }
 .screenshot-button:active { background-color: #dbf3ff; border-color: #a6deea; box-shadow: inset 0 1px 2px rgba(14, 116, 144, 0.18); }
 .screenshot-button:focus-visible { outline: none; border-color: #67e8f9; box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.35); }
 
-/* ==================== 布局开关与选项（pill 风格） ==================== */
+/* ==================== Layout toggle & options ==================== */
 .layout-toggle {
   padding: 2px 12px;
   border-radius: 999px;
@@ -316,16 +251,9 @@ window.theme-dark .screenshot-button:hover {
   transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
-window.theme-dark .layout-toggle {
-  box-shadow:
-    0 12px 26px rgba(2,6,23,0.42),
-    0 1px 0 rgba(255,255,255,0.06) inset;
-}
-.layout-toggle.open   { background-image: linear-gradient(to bottom, rgba(20,184,166,0.94), rgba(5,150,105,0.90)); border-color: rgba(110, 231, 183, 0.44); }
-.layout-toggle.closed { background-image: linear-gradient(to bottom, rgba(249,115,22,0.94), rgba(194,65,12,0.90));  border-color: rgba(254, 215, 170, 0.42); }
-.layout-toggle:hover { box-shadow: 0 12px 24px rgba(2,6,23,0.42), 0 0 20px rgba(255,255,255,0.06); }
-
-.layout-selector { /* 可选容器样式 */ }
+.layout-toggle.open   { background-image: linear-gradient(to bottom, rgba(20, 184, 166, 0.94), rgba(5, 150, 105, 0.90)); border-color: rgba(110, 231, 183, 0.44); }
+.layout-toggle.closed { background-image: linear-gradient(to bottom, rgba(249, 115, 22, 0.94), rgba(194, 65, 12, 0.90)); border-color: rgba(254, 215, 170, 0.42); }
+.layout-toggle:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.20); }
 
 .layout-option {
   padding: 1px 8px;
@@ -335,72 +263,65 @@ window.theme-dark .layout-toggle {
   font-size: 12px;
   background-image: none;
   color: #e2e8f0;
-  background-color: rgba(30,41,59,0.92);
+  background-color: rgba(30, 41, 59, 0.92);
   border: 1px solid rgba(148, 163, 184, 0.16);
-  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+  transition: background-color 140ms ease, border-color 140ms ease;
 }
-.layout-option:hover { background-color: rgba(51,65,85,0.96); box-shadow: 0 10px 22px rgba(2,6,23,0.34); }
-.layout-option.current { background-image: linear-gradient(to bottom, rgba(34,197,94,0.92), rgba(13,148,136,0.88)); border-color: rgba(187,247,208,0.38); box-shadow: 0 0 18px rgba(16,185,129,0.18), 0 12px 28px rgba(2,6,23,0.42); }
+.layout-option:hover { background-color: rgba(51, 65, 85, 0.96); }
+.layout-option.current { background-image: linear-gradient(to bottom, rgba(34, 197, 94, 0.92), rgba(13, 148, 136, 0.88)); border-color: rgba(187, 247, 208, 0.38); box-shadow: 0 0 12px rgba(16, 185, 129, 0.15); }
 
-/* ==================== Volume / Theme buttons (new) ==================== */
+/* ==================== Volume / Theme buttons ==================== */
 .volume-button,
 .theme-button {
   margin: 0 2px;
   padding: 3px 12px;
   border-radius: 999px;
   border: 1px solid rgba(17, 24, 39, 0.10);
-  background-color: rgba(255,255,255,0.82);
+  background-color: rgba(255, 255, 255, 0.82);
   color: #111827;
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.4px;
   background-image: none;
   transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 .volume-button {
   font-family: "JetBrains Mono", "Iosevka", monospace;
 }
 .volume-button:hover,
 .theme-button:hover {
-  background-color: rgba(255,255,255,0.92);
+  background-color: rgba(255, 255, 255, 0.92);
   border-color: rgba(17, 24, 39, 0.16);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
 }
 .volume-button:active,
 .theme-button:active {
-  background-color: rgba(243,244,246,0.95);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
+  background-color: rgba(243, 244, 246, 0.95);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 window.theme-dark .volume-button,
 window.theme-dark .theme-button {
-  border: 1px solid rgba(148,163,184,0.16);
-  background-color: rgba(30,41,59,0.82);
-  color: rgba(229,231,235,0.95);
-  box-shadow:
-    0 12px 26px rgba(2,6,23,0.42),
-    0 1px 0 rgba(255,255,255,0.06) inset;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background-color: rgba(30, 41, 59, 0.82);
+  color: rgba(229, 231, 235, 0.95);
 }
 window.theme-dark .volume-button {
-  border-color: rgba(34,211,238,0.22);
-  background-image: linear-gradient(to bottom, rgba(8,145,178,0.24), rgba(15,23,42,0.84));
-  color: rgba(236,254,255,0.98);
-  box-shadow:
-    0 14px 30px rgba(2,6,23,0.46),
-    0 1px 0 rgba(255,255,255,0.08) inset,
-    0 0 18px rgba(34,211,238,0.10);
+  border-color: rgba(34, 211, 238, 0.22);
+  background-image: linear-gradient(to bottom, rgba(8, 145, 178, 0.24), rgba(15, 23, 42, 0.84));
+  color: rgba(236, 254, 255, 0.98);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.08);
 }
 window.theme-dark .volume-button:hover,
 window.theme-dark .theme-button:hover {
-  background-color: rgba(51,65,85,0.92);
-  border-color: rgba(148,163,184,0.24);
+  background-color: rgba(51, 65, 85, 0.92);
+  border-color: rgba(148, 163, 184, 0.24);
 }
-
 window.theme-dark .volume-button:hover {
-  border-color: rgba(34,211,238,0.30);
+  border-color: rgba(34, 211, 238, 0.30);
 }
 
+/* ==================== Monitor badge ==================== */
 .monitor-badge {
   padding: 2px 8px;
   border-radius: 999px;
@@ -409,16 +330,13 @@ window.theme-dark .volume-button:hover {
 }
 
 window.theme-light .monitor-badge {
-  background-color: rgba(255,255,255,0.72);
-  border: 1px solid rgba(17,24,39,0.08);
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(17, 24, 39, 0.08);
   color: #0f172a;
 }
 
 window.theme-dark .monitor-badge {
-  background-image: linear-gradient(to bottom, rgba(15,23,42,0.94), rgba(30,41,59,0.88));
-  border: 1px solid rgba(148,163,184,0.16);
-  color: rgba(226,232,240,0.96);
-  box-shadow:
-    0 12px 24px rgba(2,6,23,0.40),
-    0 1px 0 rgba(255,255,255,0.05) inset;
+  background-color: rgba(15, 23, 42, 0.90);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  color: rgba(226, 232, 240, 0.96);
 }
