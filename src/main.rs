@@ -269,7 +269,7 @@ impl SimpleComponent for AppModel {
         gtk::ApplicationWindow {
             set_decorated: false,
             set_default_size: (1000, 40),
-            set_resizable: true,
+            set_resizable: false,
             add_css_class: "main-window",
 
             // 将 UI 文件中的 top_hbox 作为唯一子控件挂载进来
