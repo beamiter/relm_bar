@@ -790,7 +790,7 @@ fn shared_memory_worker(shared: Arc<SharedRingBuffer>, sender: ComponentSender<A
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let shared_path = args.get(1).cloned().unwrap_or_default();
+    let shared_path = args.iter().skip(1).last().cloned().unwrap_or_default();
 
     if let Err(e) = initialize_logging("relm_bar", &shared_path) {
         eprintln!("Init logging failed: {e}");
