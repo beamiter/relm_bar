@@ -68,6 +68,7 @@ impl SimpleComponent for AppModel {
     view! {
         #[root]
         gtk::ApplicationWindow {
+            set_title: Some("relm_bar"),
             set_decorated: false,
             set_default_size: (1000, 40),
             set_resizable: true,
@@ -121,7 +122,10 @@ impl SimpleComponent for AppModel {
         top_hbox.append(&spacer);
         top_hbox.append(status_strip.widget());
 
+        root.set_title(Some("relm_bar"));
+
         root.connect_realize(|window| {
+            window.set_title(Some("relm_bar"));
             if let Some(surface) = window.surface() {
                 surface.set_opaque_region(None);
             }
@@ -163,6 +167,9 @@ impl SimpleComponent for AppModel {
 
         spawn_background_tasks(sender.clone(), shared_buffer_opt);
         sender.input(AppInput::SystemUpdate);
+
+        // Present window to ensure proper initialization
+        root.present();
 
         let widgets = view_output!();
         ComponentParts { model, widgets }
