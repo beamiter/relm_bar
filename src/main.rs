@@ -26,7 +26,7 @@ fn main() {
             .unwrap_or_else(|| "0".to_string())
     });
 
-    let app_id = "relm_bar".to_string();
+    let app_id = format!("dev.relm.bar.mon{}", monitor_id);
     info!("Starting relm_bar with gtk_bar-aligned UI and relm4 component flow");
     info!("Application ID: {}", app_id);
 
