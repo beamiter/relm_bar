@@ -30,5 +30,10 @@ fn main() {
     info!("Starting relm_bar with gtk_bar-aligned UI and relm4 component flow");
     info!("Application ID: {}", app_id);
 
-    RelmApp::new(&app_id).run::<AppModel>(shared_path);
+    // In a bare KMS/udev session there is typically no D-Bus session bus.
+    // Without NON_UNIQUE, GApplication hangs forever trying to register the
+    // single-instance name, so no window is ever created.
+    let app = RelmApp::new(&app_id);
+    app.allow_multiple_instances(true);
+    app.run::<AppModel>(shared_path);
 }
