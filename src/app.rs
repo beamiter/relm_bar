@@ -108,10 +108,10 @@ impl SimpleComponent for AppModel {
             });
 
         let top_hbox = gtk::Box::new(gtk::Orientation::Horizontal, 4);
-        top_hbox.set_margin_top(3);
-        top_hbox.set_margin_bottom(3);
-        top_hbox.set_margin_start(3);
-        top_hbox.set_margin_end(3);
+        top_hbox.set_margin_top(0);
+        top_hbox.set_margin_bottom(0);
+        top_hbox.set_margin_start(1);
+        top_hbox.set_margin_end(1);
         top_hbox.add_css_class("panel-root");
 
         let spacer = gtk::Box::new(gtk::Orientation::Horizontal, 0);
