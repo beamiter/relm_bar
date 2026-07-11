@@ -1,6 +1,7 @@
-use gtk::prelude::*;
-use gtk4 as gtk;
-use relm4::{ComponentParts, ComponentSender, SimpleComponent};
+use relm4::{
+    ComponentParts, ComponentSender, SimpleComponent,
+    gtk::{self, prelude::*},
+};
 
 #[derive(Debug, Clone, Default)]
 pub struct LayoutSelectorState {

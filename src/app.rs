@@ -1,10 +1,12 @@
 use chrono::Local;
-use gtk::glib::{self, ControlFlow};
-use gtk::prelude::*;
-use gtk4 as gtk;
 use log::{error, info, warn};
 use relm4::{
     Component, ComponentController, ComponentParts, ComponentSender, Controller, SimpleComponent,
+    gtk::{
+        self,
+        glib::{self, ControlFlow},
+        prelude::*,
+    },
 };
 use std::sync::Arc;
 use std::thread;
@@ -322,8 +324,11 @@ impl AppModel {
 
     fn send_layout_command(&self, layout_index: u32) {
         if let Some(shared_buffer) = &self.shared_buffer_opt {
-            let command =
-                SharedCommand::new(CommandType::SetLayout, layout_index, self.monitor_num as i32);
+            let command = SharedCommand::new(
+                CommandType::SetLayout,
+                layout_index,
+                self.monitor_num as i32,
+            );
             if let Err(err) = shared_buffer.send_command(command) {
                 error!("Failed to send layout command: {}", err);
             }
@@ -377,15 +382,16 @@ impl AppModel {
     }
 
     fn sync_status_view(&self) {
-        self.status_strip.emit(StatusStripInput::Sync(StatusStripState {
-            current_time: self.current_time.clone(),
-            current_volume: self.current_volume,
-            current_muted: self.current_muted,
-            cpu_usage: self.cpu_usage,
-            memory_usage: self.memory_usage,
-            theme_dark: self.theme_dark,
-            monitor_num: self.monitor_num,
-        }));
+        self.status_strip
+            .emit(StatusStripInput::Sync(StatusStripState {
+                current_time: self.current_time.clone(),
+                current_volume: self.current_volume,
+                current_muted: self.current_muted,
+                cpu_usage: self.cpu_usage,
+                memory_usage: self.memory_usage,
+                theme_dark: self.theme_dark,
+                monitor_num: self.monitor_num,
+            }));
     }
 }
 

@@ -1,7 +1,7 @@
-use gtk::glib::Propagation;
-use gtk::prelude::*;
-use gtk4 as gtk;
-use relm4::{ComponentParts, ComponentSender, SimpleComponent};
+use relm4::{
+    ComponentParts, ComponentSender, SimpleComponent,
+    gtk::{self, glib::Propagation, prelude::*},
+};
 
 const LEVEL_WARN: f64 = 0.50;
 const LEVEL_HIGH: f64 = 0.75;
