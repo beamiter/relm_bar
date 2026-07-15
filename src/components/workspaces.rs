@@ -3,7 +3,7 @@ use relm4::{
     gtk::{self, prelude::*},
 };
 
-use shared_structures::TagStatus;
+use xbar_core::TagState;
 
 const CLS_SELECTED: u8 = 1 << 0;
 const CLS_OCCUPIED: u8 = 1 << 1;
@@ -14,7 +14,7 @@ const CLS_EMPTY: u8 = 1 << 4;
 #[derive(Debug, Clone, Default)]
 pub struct WorkspacesState {
     pub active_tab: usize,
-    pub tag_status_vec: Vec<TagStatus>,
+    pub tag_status_vec: Vec<TagState>,
 }
 
 #[derive(Debug, Clone)]
@@ -51,7 +51,7 @@ impl SimpleComponent for WorkspacesModel {
                 #[watch]
                 set_label: pick_emoji(0),
                 #[watch]
-                set_css_classes: &button_classes(model.state.tag_status_vec.get(0), 0 == model.state.active_tab),
+                set_css_classes: &button_classes(model.state.tag_status_vec.first(), 0 == model.state.active_tab),
                 connect_clicked[sender] => move |_| {
                     let _ = sender.output(WorkspacesOutput::Selected(0));
                 },
@@ -187,17 +187,17 @@ fn pick_emoji(index: usize) -> &'static str {
     }
 }
 
-fn classes_mask_for(tag: Option<&TagStatus>, is_active_index: bool) -> u8 {
+fn classes_mask_for(tag: Option<&TagState>, is_active_index: bool) -> u8 {
     if let Some(tag) = tag {
-        if tag.is_urg {
+        if tag.urgent {
             CLS_URGENT
-        } else if tag.is_filled {
+        } else if tag.filled {
             CLS_FILLED
-        } else if tag.is_selected && tag.is_occ {
+        } else if tag.selected && tag.occupied {
             CLS_SELECTED | CLS_OCCUPIED
-        } else if tag.is_selected || is_active_index {
+        } else if tag.selected || is_active_index {
             CLS_SELECTED
-        } else if tag.is_occ {
+        } else if tag.occupied {
             CLS_OCCUPIED
         } else {
             CLS_EMPTY
@@ -209,7 +209,7 @@ fn classes_mask_for(tag: Option<&TagStatus>, is_active_index: bool) -> u8 {
     }
 }
 
-fn button_classes(tag: Option<&TagStatus>, is_active_index: bool) -> Vec<&'static str> {
+fn button_classes(tag: Option<&TagState>, is_active_index: bool) -> Vec<&'static str> {
     let mut classes = vec!["tab-button"];
     let class_mask = classes_mask_for(tag, is_active_index);
 

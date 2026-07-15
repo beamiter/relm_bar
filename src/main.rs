@@ -1,5 +1,5 @@
 use std::env;
-use xbar_core::initialize_logging;
+use xbar_core::logging::init as initialize_logging;
 mod app;
 mod components;
 
@@ -20,7 +20,7 @@ fn main() {
     let monitor_id = env::var("JWM_MONITOR_ID").unwrap_or_else(|_| {
         shared_path
             .split('_')
-            .last()
+            .next_back()
             .and_then(|segment| segment.parse::<i32>().ok())
             .map(|id| id.to_string())
             .unwrap_or_else(|| "0".to_string())
