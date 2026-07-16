@@ -1,4 +1,4 @@
-use log::{debug, info, warn};
+use log::{info, warn};
 use relm4::{
     Component, ComponentController, ComponentParts, ComponentSender, Controller, SimpleComponent,
     gtk::{
@@ -7,13 +7,13 @@ use relm4::{
         prelude::*,
     },
 };
-use std::process::{Child, Command};
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 use xbar_core::{
-    BarEffect, BarRuntime, BarSnapshot, LayoutId, ModelConfig, RuntimeAdapter, RuntimeIssue,
-    RuntimeUpdate, SharedTransport, TagId, UserAction,
+    BarEffect, BarRuntime, BarSnapshot, LayoutId, ModelConfig, PlatformEffectHandler,
+    RuntimeUpdate, TagId, TransportRecoveryConfig, UserAction,
 };
+use xbar_linux_actions::ProcessActionHandler;
 
 use crate::components::{
     LayoutSelectorInput, LayoutSelectorModel, LayoutSelectorOutput, LayoutSelectorState,
@@ -38,9 +38,7 @@ pub enum AppInput {
 pub struct AppModel {
     runtime: BarRuntime,
     snapshot: BarSnapshot,
-    shared_path: String,
-    last_transport_attempt: Instant,
-    platform_children: Vec<Child>,
+    process_actions: ProcessActionHandler,
 
     root_window: gtk::ApplicationWindow,
     workspaces: Controller<WorkspacesModel>,
@@ -122,19 +120,15 @@ impl SimpleComponent for AppModel {
             window.queue_draw();
         });
 
-        let transport = if shared_path.is_empty() {
-            None
+        let mut runtime = if shared_path.is_empty() {
+            BarRuntime::new(ModelConfig::default())
         } else {
-            match SharedTransport::open(&shared_path) {
-                Ok(transport) => Some(transport),
-                Err(err) => {
-                    warn!("Failed to open WM transport at {shared_path}: {err}");
-                    None
-                }
-            }
-        };
-        let mut runtime = BarRuntime::with_transport(ModelConfig::default(), transport)
-            .expect("default xbar_core model config is valid");
+            let recovery =
+                TransportRecoveryConfig::new(shared_path.clone(), Duration::from_secs(2))
+                    .expect("static transport recovery config is valid");
+            BarRuntime::with_managed_transport(ModelConfig::default(), recovery)
+        }
+        .expect("default xbar_core model config is valid");
         let mut initial_update = runtime.tick();
         initial_update.merge(runtime.poll_transport());
         let snapshot = runtime.snapshot();
@@ -142,9 +136,7 @@ impl SimpleComponent for AppModel {
         let mut model = AppModel {
             runtime,
             snapshot,
-            shared_path,
-            last_transport_attempt: Instant::now(),
-            platform_children: Vec::new(),
+            process_actions: ProcessActionHandler::default(),
             root_window: root.clone(),
             workspaces,
             layout_selector,
@@ -218,10 +210,8 @@ impl SimpleComponent for AppModel {
                 self.handle_runtime_update(update);
             }
             AppInput::Tick => {
-                self.ensure_transport();
                 let update = self.runtime.tick();
                 self.handle_runtime_update(update);
-                self.reap_platform_children();
             }
         }
     }
@@ -233,44 +223,13 @@ impl AppModel {
         self.handle_runtime_update(update);
     }
 
-    fn ensure_transport(&mut self) {
-        if self.shared_path.is_empty()
-            || self.runtime.transport().is_some()
-            || self.last_transport_attempt.elapsed() < Duration::from_secs(2)
-        {
-            return;
-        }
-        self.last_transport_attempt = Instant::now();
-        match SharedTransport::open(&self.shared_path) {
-            Ok(transport) => {
-                self.runtime.set_transport(Some(transport));
-                info!("Connected to WM transport at {}", self.shared_path);
-            }
-            Err(err) => debug!("WM transport is still unavailable: {err}"),
-        }
-    }
-
     fn handle_runtime_update(&mut self, update: RuntimeUpdate) {
-        let transport_failed = update.issues.iter().any(|issue| {
-            matches!(
-                issue,
-                RuntimeIssue::AdapterFailed {
-                    adapter: RuntimeAdapter::Transport,
-                    ..
-                }
-            )
-        });
         for issue in &update.issues {
             warn!("xbar runtime issue: {issue:?}");
         }
         let needs_redraw = update.needs_redraw();
         for effect in update.platform_effects {
             self.handle_platform_effect(effect);
-        }
-
-        if transport_failed {
-            self.runtime.set_transport(None);
-            self.last_transport_attempt = Instant::now();
         }
 
         if needs_redraw {
@@ -291,8 +250,11 @@ impl AppModel {
                 self.root_window.set_default_size(logical_width, 40);
             }
             BarEffect::ClearMonitorGeometry => self.root_window.set_default_size(1000, 40),
-            BarEffect::Screenshot => self.spawn_platform_helper("flameshot", &["gui"]),
-            BarEffect::OpenAudioControl => self.spawn_platform_helper("pavucontrol", &[]),
+            effect @ (BarEffect::Screenshot | BarEffect::OpenAudioControl) => {
+                if let Err(error) = self.process_actions.handle(effect) {
+                    warn!("Failed to handle platform effect: {error}");
+                }
+            }
             BarEffect::WindowManager(command) => {
                 warn!("No WM transport available for command: {command:?}");
             }
@@ -303,25 +265,6 @@ impl AppModel {
                 warn!("No enabled runtime adapter handled effect: {effect:?}");
             }
         }
-    }
-
-    fn spawn_platform_helper(&mut self, program: &str, args: &[&str]) {
-        match Command::new(program).args(args).spawn() {
-            Ok(child) => self.platform_children.push(child),
-            Err(err) => warn!("Failed to launch {program}: {err}"),
-        }
-    }
-
-    fn reap_platform_children(&mut self) {
-        self.platform_children
-            .retain_mut(|child| match child.try_wait() {
-                Ok(Some(_)) => false,
-                Ok(None) => true,
-                Err(err) => {
-                    warn!("Failed to reap platform helper: {err}");
-                    false
-                }
-            });
     }
 
     fn sync_all_views(&self) {
